@@ -1,5 +1,5 @@
-conda create -n prompt python=3.7
-conda activate prompt
+# conda create -n prompt python=3.7
+# conda activate prompt
 
 pip install -q tensorflow
 # specifying tfds versions is important to reproduce our results

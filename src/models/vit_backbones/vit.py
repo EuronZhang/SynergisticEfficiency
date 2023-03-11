@@ -27,10 +27,12 @@ logger = logging.getLogger(__name__)
 
 CONFIGS = {
     # "sup_vitb8": configs.get_b16_config(),
+    "sup_vitti16": configs.get_ti16_config(),
     "sup_vitb16_224": configs.get_b16_config(),
     "sup_vitb16": configs.get_b16_config(),
     "sup_vitl16_224": configs.get_l16_config(),
     "sup_vitl16": configs.get_l16_config(),
+    "sup_vitti16_imagenet21k": configs.get_ti16_config(),
     "sup_vitb16_imagenet21k": configs.get_b16_config(),
     "sup_vitl16_imagenet21k": configs.get_l16_config(),
     "sup_vitl32_imagenet21k": configs.get_l32_config(),
