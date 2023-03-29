@@ -8,8 +8,8 @@ pip install opencv-python
 pip install tensorflow-addons
 pip install mock
 
-
-conda install pytorch==1.7.1 torchvision==0.8.2 torchaudio==0.7.2 cudatoolkit=11.0 -c pytorch
+# conda install pytorch==1.7.1 torchvision==0.8.2 torchaudio==0.7.2 cudatoolkit=11.0 -c pytorch
+# conda install pytorch==1.12.0 torchvision==0.13.0 torchaudio==0.12.0 cudatoolkit=11.3 -c pytorch
 
 python -m pip install detectron2 -f \
 https://dl.fbaipublicfiles.com/detectron2/wheels/cu110/torch1.7/index.html

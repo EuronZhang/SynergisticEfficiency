@@ -139,6 +139,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-exps/
-test/
+experiments/
 logs/
+notebooks/

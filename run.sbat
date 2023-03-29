@@ -7,25 +7,30 @@
 #SBATCH --nodes=1
 #SBATCH --gres=gpu:1
 #SBATCH --mem=16g
-#SBATCH --time=1:00:00
+#SBATCH --time=3:00:00
 #SBATCH --account=eecs598s010w23_class
 #SBATCH --partition=gpu
 #SBATCH --output=./logs/%x-%j.log
 
 model_root=/gpfs/accounts/eecs598s010w23_class_root/eecs598s010w23_class/shared_data/yourenz_group/pretrained/
 data_path=/gpfs/accounts/eecs598s010w23_class_root/eecs598s010w23_class/shared_data/yourenz_group/datasets/cub
-output_dir=/home/yourenz/SynergisticEfficiency/exps
+output_dir=/home/yourenz/SynergisticEfficiency/experiments
+
+# source activate prompt
 
 my_job_header
+
+which python
 
 python train.py \
         --config-file configs/prompt/cub.yaml \
         MODEL.TYPE "vit" \
         DATA.BATCH_SIZE "64" \
         MODEL.PROMPT.NUM_TOKENS "100" \
-        MODEL.PROMPT.DEEP "True" \
+        MODEL.PROMPT.DEEP "False" \
         MODEL.PROMPT.DROPOUT "0.1" \
-        DATA.FEATURE "sup_vitb16_imagenet21k" \
+        DATA.FEATURE "sup_vitti16_imagenet21k" \
+        SEED 42 \
         MODEL.MODEL_ROOT "${model_root}" \
         DATA.DATAPATH "${data_path}" \
         OUTPUT_DIR "${output_dir}" 
