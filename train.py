@@ -55,9 +55,9 @@ def setup(args):
             break
         else:
             count += 1
-    if count > cfg.RUN_N_TIMES:
-        raise ValueError(
-            f"Already run {cfg.RUN_N_TIMES} times for {output_folder}, no need to run more")
+    # if count > cfg.RUN_N_TIMES:
+    #     raise ValueError(
+    #         f"Already run {cfg.RUN_N_TIMES} times for {output_folder}, no need to run more")
 
     cfg.freeze()
     return cfg
@@ -103,6 +103,18 @@ def train(cfg, args):
     logger.info("Constructing models...")
     model, cur_device = build_model(cfg)
 
+    import tome
+    logger.info("begin converting to tome...")
+    tome.patch.timm(model)
+    model.r = 13
+    logger.info("finish converting to tome...")
+
+    logger.info("begin computing the throughput for the model")
+    result = tome.utils.benchmark(model, device=cur_device)
+    logger.info("the throughput is {} img/s".format(result))
+
+    model.prop_attn = False
+
     logger.info("Setting up Evalutator...")
     evaluator = Evaluator()
     logger.info("Setting up Trainer...")
@@ -115,6 +127,8 @@ def train(cfg, args):
 
     if cfg.SOLVER.TOTAL_EPOCH == 0:
         trainer.eval_classifier(test_loader, "test", 0)
+
+    
 
 
 def main(args):

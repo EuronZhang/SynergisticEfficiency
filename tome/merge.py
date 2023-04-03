@@ -20,6 +20,7 @@ def bipartite_soft_matching(
     r: int,
     class_token: bool = False,
     distill_token: bool = False,
+    # prompt_token: int = None,
 ) -> Tuple[Callable, Callable]:
     """
     Applies ToMe with a balanced matching set (50%, 50%).
@@ -38,6 +39,9 @@ def bipartite_soft_matching(
         protected += 1
     if distill_token:
         protected += 1
+    # add a prompt option
+    # if prompt_token is not None:
+    #     protected += prompt_token
 
     # We can only reduce by a maximum of 50% tokens
     t = metric.shape[1]

@@ -15,6 +15,8 @@ from .vit_prompt.vit_mae import build_model as prompt_mae_vit_model
 from .vit_adapter.vit_mae import build_model as adapter_mae_vit_model
 from .vit_adapter.vit_moco import vit_base as adapter_vit_base
 
+import tome
+
 from .vit_adapter.vit import ADPT_VisionTransformer
 MODEL_ZOO = {
     "swint_imagenet": "swin_tiny_patch4_window7_224.pth",
@@ -392,6 +394,9 @@ def build_vit_sup_models(
             prompt_cfg, model_type,
             crop_size, num_classes=-1, vis=vis
         )
+        # print("begin converting to tome...")
+        # tome.patch.timm(model)
+        # print("finish converting to tome...")
     elif adapter_cfg is not None:
         model = ADPT_VisionTransformer(model_type, crop_size, num_classes=-1, adapter_cfg=adapter_cfg)
 
