@@ -59,7 +59,7 @@ def construct_train_loader(cfg):
     return _construct_loader(
         cfg=cfg,
         split="train",
-        batch_size=int(cfg.DATA.BATCH_SIZE / cfg.NUM_GPUS),
+        batch_size=int(cfg.DATA.BATCH_SIZE / 1),
         shuffle=True,
         drop_last=drop_last,
     )
@@ -74,7 +74,7 @@ def construct_trainval_loader(cfg):
     return _construct_loader(
         cfg=cfg,
         split="trainval",
-        batch_size=int(cfg.DATA.BATCH_SIZE / cfg.NUM_GPUS),
+        batch_size=int(cfg.DATA.BATCH_SIZE / 1),
         shuffle=True,
         drop_last=drop_last,
     )
@@ -85,7 +85,7 @@ def construct_test_loader(cfg):
     return _construct_loader(
         cfg=cfg,
         split="test",
-        batch_size=int(cfg.DATA.BATCH_SIZE / cfg.NUM_GPUS),
+        batch_size=int(cfg.DATA.BATCH_SIZE / 1),
         shuffle=False,
         drop_last=False,
     )
@@ -93,7 +93,7 @@ def construct_test_loader(cfg):
 
 def construct_val_loader(cfg, batch_size=None):
     if batch_size is None:
-        bs = int(cfg.DATA.BATCH_SIZE / cfg.NUM_GPUS)
+        bs = int(cfg.DATA.BATCH_SIZE / 1)
     else:
         bs = batch_size
     """Validation loader wrapper."""

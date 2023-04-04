@@ -1,31 +1,35 @@
 #!/bin/bash
 
-#SBATCH --job-name=prompt
-#SBATCH --mail-user=yourenz@umich.edu
+#SBATCH --job-name=prompt_tome_test
+#SBATCH --mail-user=chuizhao@umich.edu
 #SBATCH --mail-type=FAIL
 #SBATCH --cpus-per-task=8
 #SBATCH --nodes=1
+#SBATCH --mem=64g
 #SBATCH --gres=gpu:1
-#SBATCH --mem=16g
 #SBATCH --time=1:00:00
 #SBATCH --account=eecs598s010w23_class
-#SBATCH --partition=gpu
+#SBATCH --partition=spgpu
 #SBATCH --output=./logs/%x-%j.log
 
 model_root=/gpfs/accounts/eecs598s010w23_class_root/eecs598s010w23_class/shared_data/yourenz_group/pretrained/
-data_path=/gpfs/accounts/eecs598s010w23_class_root/eecs598s010w23_class/shared_data/yourenz_group/datasets/cub
-output_dir=/home/yourenz/SynergisticEfficiency/exps
-
+# data_path=/gpfs/accounts/eecs598s010w23_class_root/eecs598s010w23_class/shared_data/yourenz_group/datasets/cub
+# data_path=/gpfs/accounts/eecs598s010w23_class_root/eecs598s010w23_class/shared_data/yourenz_group/datasets/cub
+data_path=/gpfs/accounts/eecs553w23_class_root/eecs553w23_class/shared_data/yourenz_group/datasets/eurosat/
+output_dir=/home/chuizhao/SynergisticEfficiency/exps
 my_job_header
 
 python train.py \
         --config-file configs/prompt/cub.yaml \
         MODEL.TYPE "vit" \
         DATA.BATCH_SIZE "64" \
-        MODEL.PROMPT.NUM_TOKENS "100" \
-        MODEL.PROMPT.DEEP "True" \
-        MODEL.PROMPT.DROPOUT "0.1" \
+        DATA.NAME "vtab-eurosat" \
+        DATA.NUMBER_CLASSES "10" \
+        MODEL.PROMPT.NUM_TOKENS "50" \
+        MODEL.PROMPT.DEEP "False" \
+        MODEL.PROMPT.DROPOUT "0.0" \
         DATA.FEATURE "sup_vitb16_imagenet21k" \
         MODEL.MODEL_ROOT "${model_root}" \
         DATA.DATAPATH "${data_path}" \
-        OUTPUT_DIR "${output_dir}" 
+        OUTPUT_DIR "${output_dir}" \
+        SEED 42
