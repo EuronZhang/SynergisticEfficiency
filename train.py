@@ -106,7 +106,7 @@ def train(cfg, args):
     import tome
     logger.info("begin converting to tome...")
     tome.patch.timm(model)
-    model.r = 13
+    model.r = cfg.MODEL.REDUCTION
     logger.info("finish converting to tome...")
 
     logger.info("begin computing the throughput for the model")

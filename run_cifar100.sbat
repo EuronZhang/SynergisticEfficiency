@@ -1,0 +1,35 @@
+#!/bin/bash
+
+#SBATCH --job-name=prompt_tome_test
+#SBATCH --mail-user=chuizhao@umich.edu
+#SBATCH --mail-type=FAIL
+#SBATCH --cpus-per-task=8
+#SBATCH --nodes=1
+#SBATCH --mem=64g
+#SBATCH --gres=gpu:1
+#SBATCH --time=2:00:00
+#SBATCH --account=eecs598s010w23_class
+#SBATCH --partition=gpu
+#SBATCH --output=./logs/%x-%j.log
+
+model_root=/gpfs/accounts/eecs598s010w23_class_root/eecs598s010w23_class/shared_data/yourenz_group/pretrained/
+data_path=/gpfs/accounts/eecs553w23_class_root/eecs553w23_class/shared_data/yourenz_group/datasets/cifar100
+output_dir=/home/chuizhao/SynergisticEfficiency/exps
+my_job_header
+
+python train.py \
+        --config-file configs/prompt/cub.yaml \
+        MODEL.TYPE "vit" \
+        DATA.BATCH_SIZE "64" \
+        DATA.NAME "vtab-cifar(num_classes=100)" \
+        DATA.NUMBER_CLASSES "100" \
+        MODEL.PROMPT.NUM_TOKENS "100" \
+        MODEL.PROMPT.DEEP "False" \
+        MODEL.PROMPT.DROPOUT "0.0" \
+        SOLVER.TOTAL_EPOCH "157" \
+        MODEL.REDUCTION "0" \
+        DATA.FEATURE "sup_vitti16_imagenet21k" \
+        MODEL.MODEL_ROOT "${model_root}" \
+        DATA.DATAPATH "${data_path}" \
+        OUTPUT_DIR "${output_dir}" \
+        SEED 42

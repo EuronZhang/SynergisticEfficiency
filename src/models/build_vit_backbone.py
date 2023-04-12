@@ -394,9 +394,6 @@ def build_vit_sup_models(
             prompt_cfg, model_type,
             crop_size, num_classes=-1, vis=vis
         )
-        # print("begin converting to tome...")
-        # tome.patch.timm(model)
-        # print("finish converting to tome...")
     elif adapter_cfg is not None:
         model = ADPT_VisionTransformer(model_type, crop_size, num_classes=-1, adapter_cfg=adapter_cfg)
 
