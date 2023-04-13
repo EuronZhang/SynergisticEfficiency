@@ -23,6 +23,8 @@ from src.utils.file_io import PathManager
 from launch import default_argument_parser, logging_train_setup
 warnings.filterwarnings("ignore")
 
+import e_vit
+
 
 def setup(args):
     """
@@ -55,9 +57,9 @@ def setup(args):
             break
         else:
             count += 1
-    if count > cfg.RUN_N_TIMES:
-        raise ValueError(
-            f"Already run {cfg.RUN_N_TIMES} times for {output_folder}, no need to run more")
+    # if count > cfg.RUN_N_TIMES:
+    #     raise ValueError(
+    #         f"Already run {cfg.RUN_N_TIMES} times for {output_folder}, no need to run more")
 
     cfg.freeze()
     return cfg
@@ -102,6 +104,9 @@ def train(cfg, args):
     train_loader, val_loader, test_loader = get_loaders(cfg, logger)
     logger.info("Constructing models...")
     model, cur_device = build_model(cfg)
+
+    e_vit.patch.timm(model, keep_rate=0.7)
+    print("check e-vit: ", model.__class__, model._evit_info)
 
     logger.info("Setting up Evalutator...")
     evaluator = Evaluator()

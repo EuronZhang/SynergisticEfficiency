@@ -18,6 +18,8 @@ from ..solver.losses import build_loss
 from ..utils import logging
 from ..utils.train_utils import AverageMeter, gpu_mem_usage
 
+from e_vit.utils import adjust_keep_rate
+
 logger = logging.get_logger("visual_prompt")
 
 
@@ -171,10 +173,19 @@ class Trainer():
 
             end = time.time()
 
+            it = epoch * len(train_loader)
+            ITERS_PER_EPOCH = len(train_loader)
+
             for idx, input_data in enumerate(train_loader):
                 if self.cfg.DBG and idx == 20:
                     # if debugging, only need to see the first few iterations
                     break
+
+                keep_rate = adjust_keep_rate(it, epoch, warmup_epochs=self.cfg.SOLVER.WARMUP_EPOCH,
+                                             total_epochs=60,
+                                             ITERS_PER_EPOCH=ITERS_PER_EPOCH, base_keep_rate=0.7)
+                
+                self.model._evit_info["keep_rate"] = keep_rate
                 
                 X, targets = self.get_input(input_data)
                 # logger.info(X.shape)
