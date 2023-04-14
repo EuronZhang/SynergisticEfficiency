@@ -12,6 +12,8 @@ import random
 from time import sleep
 from random import randint
 
+import torchvision
+
 import src.utils.logging as logging
 from src.configs.config import get_cfg
 from src.data import loader as data_loader
@@ -103,17 +105,30 @@ def train(cfg, args):
     logger.info("Constructing models...")
     model, cur_device = build_model(cfg)
 
-    import tome
-    logger.info("begin converting to tome...")
-    tome.patch.timm(model)
-    model.r = cfg.MODEL.REDUCTION
-    logger.info("finish converting to tome...")
+    # import tome
+    # logger.info("begin converting to tome...")
+    # tome.patch.timm(model)
+    # model.r = 13
+    # logger.info("finish converting to tome...")
+    # model.prop_attn = False
+
+    # import proto
+    # logger.info("begin converting to random...")
+    # proto.patch.rand_drop(model)
+    # model.r = 13
+    # logger.info("finish converting to random...")
+    # model.prop_attn = False
+
+    import proto
+    # logger.info("begin converting to proto...")
+    # proto.patch.timm(model, K=cfg.K, mode=cfg.MODE)
+    # model.r = cfg.MODEL.REDUCTION
+    # logger.info("finish converting to proto...")
+    # model.prop_attn = False
 
     logger.info("begin computing the throughput for the model")
-    result = tome.utils.benchmark(model, device=cur_device)
+    result = proto.utils.benchmark(model, device=cur_device)
     logger.info("the throughput is {} img/s".format(result))
-
-    model.prop_attn = False
 
     logger.info("Setting up Evalutator...")
     evaluator = Evaluator()

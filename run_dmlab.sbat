@@ -33,4 +33,6 @@ python train.py \
         MODEL.MODEL_ROOT "${model_root}" \
         DATA.DATAPATH "${data_path}" \
         OUTPUT_DIR "${output_dir}" \
-        SEED 42
+        SEED 42 \
+        K 0.1 \
+        MODE "max"
