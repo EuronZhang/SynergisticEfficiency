@@ -75,7 +75,6 @@ class ToMeAttention(Attention):
         # Note: this is copied from timm.models.vision_transformer.Attention with modifications.
         B, N, C = x.shape
 
-
         mixed_query_layer = self.query(x) # B, num_patches, head_size*num_head
         mixed_key_layer = self.key(x)
         mixed_value_layer = self.value(x)
@@ -87,7 +86,7 @@ class ToMeAttention(Attention):
         attention_scores = torch.matmul(query_layer, key_layer.transpose(-1, -2)) # B, num_head, num_patches, num_patches
         attention_scores = attention_scores / math.sqrt(self.attention_head_size)
         if size is not None:
-            attn = attn + size.log()[:, None, None, :, 0]
+            attention_scores = attention_scores + size.log()[:, None, None, :, 0]
         
         attention_probs = self.softmax(attention_scores) # B, num_head, num_patches(query), num_patches(key)
         attention_probs = self.attn_dropout(attention_probs)
@@ -176,7 +175,9 @@ def apply_patch(
 
     for module in model.modules():
         if isinstance(module, Block):
+            print("replace the block with tomeblock")
             module.__class__ = ToMeBlock
             module._tome_info = model._tome_info
         elif isinstance(module, Attention):
+            print("replace the attention with tomeattention")
             module.__class__ = ToMeAttention

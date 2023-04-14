@@ -15,6 +15,8 @@ from .vit_prompt.vit_mae import build_model as prompt_mae_vit_model
 from .vit_adapter.vit_mae import build_model as adapter_mae_vit_model
 from .vit_adapter.vit_moco import vit_base as adapter_vit_base
 
+import tome
+
 from .vit_adapter.vit import ADPT_VisionTransformer
 MODEL_ZOO = {
     "swint_imagenet": "swin_tiny_patch4_window7_224.pth",

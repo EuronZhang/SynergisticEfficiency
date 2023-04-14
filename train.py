@@ -105,8 +105,19 @@ def train(cfg, args):
     logger.info("Constructing models...")
     model, cur_device = build_model(cfg)
 
+    import tome, e_vit
+    logger.info("begin converting to E-vit...")
+    # tome.patch.timm(model)
+    # model.r = cfg.MODEL.REDUCTION
     e_vit.patch.timm(model, keep_rate=0.7)
-    print("check e-vit: ", model.__class__, model._evit_info)
+    print("check E-vit: ", model.__class__, model._evit_info)
+    logger.info("finish converting to E-vit...")
+
+    logger.info("begin computing the throughput for the model")
+    result = tome.utils.benchmark(model, device=cur_device)
+    logger.info("the throughput is {} img/s".format(result))
+
+    # model.prop_attn = False
 
     logger.info("Setting up Evalutator...")
     evaluator = Evaluator()
@@ -120,6 +131,8 @@ def train(cfg, args):
 
     if cfg.SOLVER.TOTAL_EPOCH == 0:
         trainer.eval_classifier(test_loader, "test", 0)
+
+    
 
 
 def main(args):

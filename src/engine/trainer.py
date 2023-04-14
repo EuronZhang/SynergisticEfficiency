@@ -263,12 +263,12 @@ class Trainer():
                 break
 
         # save the last checkpoints
-        # if self.cfg.MODEL.SAVE_CKPT:
-        #     Checkpointer(
-        #         self.model,
-        #         save_dir=self.cfg.OUTPUT_DIR,
-        #         save_to_disk=True
-        #     ).save("last_model")
+        if self.cfg.MODEL.SAVE_CKPT:
+            Checkpointer(
+                self.model,
+                save_dir=self.cfg.OUTPUT_DIR,
+                save_to_disk=True
+            ).save("last_model")
 
     @torch.no_grad()
     def save_prompt(self, epoch):

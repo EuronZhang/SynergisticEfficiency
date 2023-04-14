@@ -33,6 +33,7 @@ _C.MODEL = CfgNode()
 _C.MODEL.TRANSFER_TYPE = "linear"  # one of linear, end2end, prompt, adapter, side, partial-1, tinytl-bias
 _C.MODEL.WEIGHT_PATH = ""  # if resume from some checkpoint file
 _C.MODEL.SAVE_CKPT = False
+_C.MODEL.REDUCTION = 13
 
 _C.MODEL.MODEL_ROOT = ""  # root folder for pretrained model weights
 
@@ -59,7 +60,6 @@ _C.MODEL.PROMPT.CLSEMB_FOLDER = ""
 _C.MODEL.PROMPT.CLSEMB_PATH = ""
 _C.MODEL.PROMPT.PROJECT = -1  # "projection mlp hidden dim"
 _C.MODEL.PROMPT.DEEP = False # "whether do deep prompt or not, only for prepend location"
-
 
 _C.MODEL.PROMPT.NUM_DEEP_LAYERS = None  # if set to be an int, then do partial-deep prompt tuning
 _C.MODEL.PROMPT.REVERSE_DEEP = False  # if to only update last n layers, not the input layer
