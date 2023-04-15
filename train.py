@@ -124,7 +124,6 @@ def train(cfg, args):
     # proto.patch.timm(model, K=cfg.K, mode=cfg.MODE)
     # model.r = cfg.MODEL.REDUCTION
     # logger.info("finish converting to proto...")
-    # model.prop_attn = False
 
     logger.info("begin computing the throughput for the model")
     result = proto.utils.benchmark(model, device=cur_device)
