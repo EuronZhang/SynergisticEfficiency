@@ -1,13 +1,13 @@
 #!/bin/bash
 
-#SBATCH --job-name=proto_vitb_flower_0.1
+#SBATCH --job-name=prompt_vitti_flower
 #SBATCH --mail-user=yourenz@umich.edu
 #SBATCH --mail-type=FAIL
 #SBATCH --cpus-per-task=8
 #SBATCH --nodes=1
 #SBATCH --mem=64g
 #SBATCH --gres=gpu:1
-#SBATCH --time=4:00:00
+#SBATCH --time=2:00:00
 #SBATCH --account=eecs553w23_class
 #SBATCH --partition=gpu
 #SBATCH --output=./logs/%x-%j.log
@@ -19,14 +19,14 @@ my_job_header
 
 python train.py \
         --config-file configs/prompt/flowers.yaml \
-        DATA.BATCH_SIZE 64 \
-        SOLVER.BASE_LR 0.05 \
+        DATA.BATCH_SIZE 128 \
+        SOLVER.BASE_LR 0.1 \
         MODEL.TYPE "vit" \
         MODEL.PROMPT.NUM_TOKENS "100" \
         MODEL.PROMPT.DEEP "False" \
         MODEL.PROMPT.DROPOUT "0.0" \
         MODEL.REDUCTION "13" \
-        DATA.FEATURE "sup_vitb16_imagenet21k" \
+        DATA.FEATURE "sup_vitti16_imagenet21k" \
         SOLVER.TOTAL_EPOCH "100" \
         MODEL.MODEL_ROOT "${model_root}" \
         DATA.DATAPATH "${data_path}" \
