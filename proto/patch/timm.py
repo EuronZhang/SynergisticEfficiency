@@ -55,7 +55,7 @@ class ProtoBlock(Block):
             selected_tokens = torch.gather(tokens, dim=1, index=indices)
 
             if self._proto_info["vis"]:
-                self._proto_info["idx_traker"].append(indices)
+                self._proto_info["idx_tracker"].append(indices)
 
             # del tokens
 
@@ -72,13 +72,17 @@ def make_proto_class(transformer_class):
         def forward(self, *args, **kwdargs) -> torch.Tensor:
             self._proto_info["r"] = self.r
             self._proto_info["num_tokens_tracker"] = []
-            self._proto_info["idx_traker"] = []
+            self._proto_info["idx_tracker"] = []
 
             return super().forward(*args, **kwdargs)
         
         @property
         def num_tokens(self):
             return self._proto_info["num_tokens_tracker"]
+
+        @property
+        def idx_tracker(self):
+            return self._proto_info["idx_tracker"]
 
     return ProtoVisionTransformer
 
@@ -103,7 +107,7 @@ def apply_patch(model, K, mode, vis=False):
         "mode": mode,
         "num_tokens_tracker": [],
         "vis": vis,
-        "idx_traker": []
+        "idx_tracker": []
     }
 
     for module in model.modules():

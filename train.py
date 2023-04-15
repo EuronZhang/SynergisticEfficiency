@@ -121,7 +121,7 @@ def train(cfg, args):
 
     import proto
     # logger.info("begin converting to proto...")
-    # proto.patch.timm(model, K=cfg.K, mode=cfg.MODE)
+    # proto.patch.vpt(model, K=cfg.K, mode=cfg.MODE)
     # model.r = cfg.MODEL.REDUCTION
     # logger.info("finish converting to proto...")
 

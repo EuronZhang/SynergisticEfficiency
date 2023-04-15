@@ -5,7 +5,8 @@
 # LICENSE file in the root directory of this source tree.
 # --------------------------------------------------------
 
+from .vpt import apply_patch as vpt
 from .timm import apply_patch as timm
 from .rand_drop import apply_patch as rand_drop
 
-__all__ = ["timm", "rand_drop"]
+__all__ = ["vpt", "timm", "rand_drop"]
