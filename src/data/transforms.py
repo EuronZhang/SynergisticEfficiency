@@ -29,21 +29,13 @@ def get_transforms(split, size):
                 normalize,
             ]
         )
-    elif split == "val":
-        transform = tv.transforms.Compose(
-            [
-                tv.transforms.Resize(resize_dim),
-                tv.transforms.CenterCrop(crop_dim),
-                tv.transforms.ToTensor(),
-                normalize,
-            ]
-        )
     else:
         transform = tv.transforms.Compose(
             [
                 tv.transforms.Resize(resize_dim),
                 tv.transforms.CenterCrop(crop_dim),
                 tv.transforms.ToTensor(),
+                normalize,
             ]
         )
     return transform

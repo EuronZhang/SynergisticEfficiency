@@ -182,7 +182,7 @@ class Trainer():
                     break
 
                 keep_rate = adjust_keep_rate(it, epoch, warmup_epochs=self.cfg.SOLVER.WARMUP_EPOCH,
-                                             total_epochs=60,
+                                             total_epochs=80,
                                              ITERS_PER_EPOCH=ITERS_PER_EPOCH, base_keep_rate=0.7)
                 
                 self.model._evit_info["keep_rate"] = keep_rate
