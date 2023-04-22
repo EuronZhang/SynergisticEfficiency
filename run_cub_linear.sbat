@@ -1,38 +1,35 @@
 #!/bin/bash
 
-#SBATCH --job-name=proto_vitb_cub_vis
+#SBATCH --job-name=linear_vitb_cub
 #SBATCH --mail-user=yourenz@umich.edu
 #SBATCH --mail-type=FAIL
 #SBATCH --cpus-per-task=8
 #SBATCH --nodes=1
 #SBATCH --mem=64g
 #SBATCH --gres=gpu:1
-#SBATCH --time=4:00:00
-#SBATCH --account=eecs553w23_class
+#SBATCH --time=3:00:00
+#SBATCH --account=stellayu98
 #SBATCH --partition=spgpu
 #SBATCH --output=./logs/%x-%j.log
-å
+
 model_root=/gpfs/accounts/eecs598s010w23_class_root/eecs598s010w23_class/shared_data/yourenz_group/pretrained/
-data_path=/gpfs/accounts/eecs598s010w23_class_root/eecs598s010w23_class/shared_data/yourenz_group/datasets/cub
+data_path=/gpfs/accounts/eecs553w23_class_root/eecs553w23_class/shared_data/yourenz_group/datasets/cub
 output_dir=/home/yourenz/SynergisticEfficiency/exps
 my_job_header
 
 python train.py \
-        --config-file configs/prompt/cub.yaml \
+        --config-file configs/linear/cub.yaml \
         MODEL.TYPE "vit" \
         DATA.BATCH_SIZE "64" \
+        SOLVER.BASE_LR 0.1 \
+        SOLVER.WEIGHT_DECAY 0.01\
         DATA.NAME "CUB" \
         DATA.NUMBER_CLASSES "200" \
-        MODEL.PROMPT.NUM_TOKENS "100" \
         MODEL.PROMPT.DEEP "False" \
         MODEL.PROMPT.DROPOUT "0.0" \
-        MODEL.REDUCTION "13" \
-        MODEL.SAVE_CKPT "True" \
-        DATA.FEATURE "sup_vitb16_imagenet21k" \
+        DATA.FEATURE "sup_vitti16_imagenet21k" \
         SOLVER.TOTAL_EPOCH "100" \
         MODEL.MODEL_ROOT "${model_root}" \
         DATA.DATAPATH "${data_path}" \
         OUTPUT_DIR "${output_dir}" \
         SEED 42 \
-        K 0.1 \
-        MODE "max"

@@ -8,7 +8,7 @@
 #SBATCH --mem=64g
 #SBATCH --gres=gpu:1
 #SBATCH --time=2:00:00
-#SBATCH --account=stellayu98
+#SBATCH --account=eecs553w23_class
 #SBATCH --partition=gpu
 #SBATCH --output=./logs/%x-%j.log
 
@@ -23,6 +23,7 @@ python train.py \
         DATA.BATCH_SIZE "64" \
         DATA.NAME "vtab-eurosat" \
         DATA.NUMBER_CLASSES "10" \
+        MODEL.SAVE_CKPT "True" \
         MODEL.PROMPT.NUM_TOKENS "50" \
         MODEL.PROMPT.DEEP "False" \
         MODEL.PROMPT.DROPOUT "0.0" \
