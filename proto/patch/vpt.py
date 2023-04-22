@@ -53,12 +53,13 @@ class ProtoBlock(Block):
                 raise ValueError
             
             # del score_first_order
+
+            if self._proto_info["vis"]:
+                self._proto_info["idx_tracker"].append(indices.cpu())
             
             indices = indices.unsqueeze(2).expand(-1, -1, tokens.size(-1))
             selected_tokens = torch.gather(tokens, dim=1, index=indices)
 
-            if self._proto_info["vis"]:
-                self._proto_info["idx_traker"].append(indices)
 
             # del tokens
 
@@ -115,13 +116,17 @@ def make_proto_class(transformer_class):
             self._proto_info["r"] = self.r
             # self._proto_info["r"] = parse_r(len(self.enc.transformer.encoder.layer), self.r)
             self._proto_info["num_tokens_tracker"] = []
-            self._proto_info["idx_traker"] = []
+            self._proto_info["idx_tracker"] = []
 
             return super().forward(*args, **kwdargs)
         
         @property
         def num_tokens(self):
             return self._proto_info["num_tokens_tracker"]
+
+        @property
+        def idx_tracker(self):
+            return self._proto_info["idx_tracker"]
 
     return ProtoVisionTransformer
 
@@ -146,7 +151,7 @@ def apply_patch(model, K, mode, vis=False):
         "mode": mode,
         "num_tokens_tracker": [],
         "vis": vis,
-        "idx_traker": []
+        "idx_tracker": []
     }
 
     for module in model.modules():
