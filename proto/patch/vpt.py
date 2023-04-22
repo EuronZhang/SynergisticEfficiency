@@ -4,6 +4,8 @@ import torch.nn.functional as F
 from src.models.vit_backbones.vit import Block
 # from timm.models.vision_transformer import Block
 
+from ..utils import parse_r
+
 class ProtoBlock(Block):
     
     def _drop_path1(self, x):
@@ -111,6 +113,7 @@ def make_proto_class(transformer_class):
 
         def forward(self, *args, **kwdargs) -> torch.Tensor:
             self._proto_info["r"] = self.r
+            # self._proto_info["r"] = parse_r(len(self.enc.transformer.encoder.layer), self.r)
             self._proto_info["num_tokens_tracker"] = []
             self._proto_info["idx_traker"] = []
 

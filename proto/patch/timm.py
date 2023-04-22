@@ -2,6 +2,7 @@ import torch
 import torch.nn.functional as F
 
 from timm.models.vision_transformer import Block
+from ..utils import parse_r
 
 class ProtoBlock(Block):
     
@@ -14,10 +15,11 @@ class ProtoBlock(Block):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         self.r, self.K, self.mode = self._proto_info["r"], self._proto_info["K"], self._proto_info["mode"]
         assert self.K is not None and self.mode is not None, f"Please set proto params before forward, got K={self.K}, mode={self.mode}"
-
+        
         x_attn = self.attn(self.norm1(x))
         x = x + self._drop_path1(x_attn)
 
+        self.r = self._proto_info["r"].pop(0)
         if self.r > 0:
             # Apply prototyping
             cls_token, tokens = x[:, :1, :], x[:, 1:, :]
@@ -36,7 +38,10 @@ class ProtoBlock(Block):
             
             # del dist_mat, d_knn, ind_knn, neighbors_dist, tokens_norm
             
-            p = num_tokens - min(self.r, (num_tokens - 1) // 2) # only reduce by a maximum of 50% tokens
+            if isinstance(self.r, int):
+                p = num_tokens - min(self.r, (num_tokens - 1) // 2) # only reduce by a maximum of 50% tokens
+            else:
+                p = int(num_tokens * (1 - self.r))
             
             if self.mode == "min":
                 _, indices = score_first_order.topk(k=p, axis=1, largest=True)
@@ -50,12 +55,12 @@ class ProtoBlock(Block):
                 raise ValueError
             
             # del score_first_order
+
+            if self._proto_info["vis"]:
+                self._proto_info["idx_tracker"].append(indices.cpu())
             
             indices = indices.unsqueeze(2).expand(-1, -1, tokens.size(-1))
             selected_tokens = torch.gather(tokens, dim=1, index=indices)
-
-            if self._proto_info["vis"]:
-                self._proto_info["idx_tracker"].append(indices)
 
             # del tokens
 
@@ -63,6 +68,7 @@ class ProtoBlock(Block):
         
         self._proto_info["num_tokens_tracker"].append(x.size(1))
         x = x + self._drop_path2(self.mlp(self.norm2(x)))
+            
         return x
 
 
@@ -70,7 +76,7 @@ def make_proto_class(transformer_class):
     class ProtoVisionTransformer(transformer_class):
 
         def forward(self, *args, **kwdargs) -> torch.Tensor:
-            self._proto_info["r"] = self.r
+            self._proto_info["r"] = parse_r(len(self.blocks), self.r)
             self._proto_info["num_tokens_tracker"] = []
             self._proto_info["idx_tracker"] = []
 
